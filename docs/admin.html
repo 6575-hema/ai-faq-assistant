@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage FAQs · AI FAQ Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a class="brand" href="index.html">🤖 AI FAQ Assistant</a>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="chat.html">Ask AI</a>
+        <a href="admin.html">Manage FAQs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <div class="page-head">
+        <h1>Manage FAQs</h1>
+        <p>Add HR policy questions. The AI chatbot uses them to answer employees.</p>
+      </div>
+
+      <div class="admin-grid">
+        <div class="card">
+          <h2>Add a new FAQ</h2>
+          <form id="faq-form">
+            <label for="faq-question">Question</label>
+            <input id="faq-question" required />
+            <label for="faq-answer">Answer</label>
+            <textarea id="faq-answer" required></textarea>
+            <label for="faq-category">Category (optional)</label>
+            <input id="faq-category" placeholder="General HR" />
+            <div style="margin-top: 14px;">
+              <button class="btn btn-primary" type="submit">Add FAQ</button>
+            </div>
+            <div id="faq-status" class="status"></div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h2 id="faq-count">All FAQs</h2>
+          <input id="faq-search" class="search" placeholder="Search FAQs..." autocomplete="off" />
+          <ul id="faq-list" class="faq-list">
+            <li class="status">Loading FAQs...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">© 2026 AI FAQ Assistant · TN Skills Project</div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script>
+    const faqList = document.getElementById('faq-list');
+    const faqCount = document.getElementById('faq-count');
+    const faqForm = document.getElementById('faq-form');
+    const faqStatus = document.getElementById('faq-status');
+    const faqSearch = document.getElementById('faq-search');
+    let allFaqs = [];
+
+    const renderFAQs = () => {
+      const term = faqSearch.value.trim().toLowerCase();
+      const shown = allFaqs.filter((faq) =>
+        [faq.question, faq.answer, faq.category].join(' ').toLowerCase().includes(term)
+      );
+      faqCount.textContent = `All FAQs (${allFaqs.length})`;
+      faqList.innerHTML = shown.length
+        ? shown
+            .map(
+              (faq) => `<li>
+                <div class="faq-q">${escapeHtml(faq.question)}</div>
+                <div class="faq-a">${escapeHtml(faq.answer)}</div>
+                <span class="tag">${escapeHtml(faq.category || 'General HR')}</span>
+              </li>`
+            )
+            .join('')
+        : '<li class="status">No FAQs found.</li>';
+    };
+
+    const loadFAQs = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/faqs`);
+        const data = await res.json();
+        allFaqs = data.data;
+        renderFAQs();
+      } catch (err) {
+        faqList.innerHTML = '<li class="status err">Could not load FAQs. The server may be waking up, so refresh in a moment.</li>';
+      }
+    };
+
+    faqSearch.addEventListener('input', renderFAQs);
+
+    faqForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const body = {
+        question: document.getElementById('faq-question').value.trim(),
+        answer: document.getElementById('faq-answer').value.trim(),
+      };
+      const category = document.getElementById('faq-category').value.trim();
+      if (category) body.category = category;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/faqs`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (data.success) {
+          faqStatus.textContent = 'FAQ added successfully.';
+          faqStatus.className = 'status ok';
+          faqForm.reset();
+          loadFAQs();
+        } else {
+          faqStatus.textContent = data.error || data.message;
+          faqStatus.className = 'status err';
+        }
+      } catch (err) {
+        faqStatus.textContent = 'Could not reach the server.';
+        faqStatus.className = 'status err';
+      }
+    });
+
+    loadFAQs();
+  </script>
+</body>
+</html>

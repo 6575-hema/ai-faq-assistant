@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ask AI · AI FAQ Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a class="brand" href="index.html">🤖 AI FAQ Assistant</a>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="chat.html">Ask AI</a>
+        <a href="admin.html">Manage FAQs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container chat-wrap">
+      <div class="page-head">
+        <h1>Ask a Question</h1>
+        <p>Ask anything about company HR policies. Gemini AI answers using the FAQ database.</p>
+      </div>
+
+      <section class="card">
+        <div id="messages">
+          <div class="msg bot">Hi! Ask me anything about working hours, leave, salary, WFH and more.</div>
+        </div>
+        <div class="suggestions">
+          <button>What are the working hours?</button>
+          <button>How many leaves do I get?</button>
+          <button>Can I work from home?</button>
+          <button>When is salary credited?</button>
+        </div>
+        <form id="chat-form" class="row">
+          <input id="chat-input" placeholder="Type your question..." autocomplete="off" required />
+          <button class="btn btn-primary" type="submit">Send</button>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">© 2026 AI FAQ Assistant · TN Skills Project</div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script>
+    const messages = document.getElementById('messages');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = chatForm.querySelector('button');
+
+    const addMessage = (html, type) => {
+      const div = document.createElement('div');
+      div.className = `msg ${type}`;
+      div.innerHTML = html;
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+      return div;
+    };
+
+    const ask = async (question) => {
+      addMessage(escapeHtml(question), 'user');
+      const thinking = addMessage('Thinking...', 'bot');
+      // Free Render servers sleep when idle; the first request can take up to a minute.
+      const slowHint = setTimeout(() => {
+        thinking.textContent = 'Waking up the server, this can take up to a minute the first time...';
+      }, 5000);
+      sendBtn.disabled = true;
+      try {
+        const res = await fetch(`${API_BASE}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question }),
+        });
+        const data = await res.json();
+        thinking.remove();
+        if (data.success) {
+          addMessage(formatAnswer(data.aiAnswer), 'bot');
+        } else {
+          addMessage(escapeHtml(data.error || data.message || 'Something went wrong.'), 'error');
+        }
+      } catch (err) {
+        thinking.remove();
+        addMessage('Could not reach the server. Please try again in a moment.', 'error');
+      } finally {
+        clearTimeout(slowHint);
+        sendBtn.disabled = false;
+        chatInput.focus();
+      }
+    };
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const question = chatInput.value.trim();
+      if (!question) return;
+      chatInput.value = '';
+      ask(question);
+    });
+
+    document.querySelectorAll('.suggestions button').forEach((btn) => {
+      btn.addEventListener('click', () => ask(btn.textContent));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI FAQ Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a class="brand" href="index.html">🤖 AI FAQ Assistant</a>
+      <button class="nav-toggle" aria-label="Menu">☰</button>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="chat.html">Ask AI</a>
+        <a href="admin.html">Manage FAQs</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <section class="hero">
+        <span class="badge">Powered by Google Gemini</span>
+        <h1>Your AI HR Helpdesk</h1>
+        <p>Get instant answers about working hours, leave, salary, work-from-home and more. Answers are drawn from your company's own FAQ database.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="chat.html">Ask a Question</a>
+          <a class="btn btn-outline" href="admin.html">Manage FAQs</a>
+        </div>
+      </section>
+
+      <h2 class="section-title">Features</h2>
+      <p class="section-sub">Everything employees and admins need in one place</p>
+      <div class="features">
+        <div class="card feature">
+          <div class="icon">🤖</div>
+          <h3>AI Chatbot</h3>
+          <p>Ask questions in plain language and get clear, friendly answers.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">📚</div>
+          <h3>FAQ Knowledge Base</h3>
+          <p>All HR policies are stored in MongoDB, so the AI answers from real company data.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">➕</div>
+          <h3>Admin Panel</h3>
+          <p>Add new questions and answers at any time. The chatbot uses them right away.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">🏷️</div>
+          <h3>Categories</h3>
+          <p>Group FAQs by topic such as Leave, Payroll or General HR.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">🔍</div>
+          <h3>Search FAQs</h3>
+          <p>Filter the FAQ list instantly to find any policy.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">⚡</div>
+          <h3>Instant Answers</h3>
+          <p>No waiting for HR emails. Get a response in seconds, any time.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">📱</div>
+          <h3>Works Everywhere</h3>
+          <p>Responsive design for desktop, tablet and mobile, with dark mode.</p>
+        </div>
+        <div class="card feature">
+          <div class="icon">🔒</div>
+          <h3>Secure Backend</h3>
+          <p>API keys stay on the server and are never exposed in the browser.</p>
+        </div>
+      </div>
+
+      <h2 class="section-title">How it works</h2>
+      <p class="section-sub">Three simple steps</p>
+      <div class="steps">
+        <div class="card step">
+          <div class="step-num">1</div>
+          <h3>Admin adds FAQs</h3>
+          <p>HR adds policy questions and answers from the Manage FAQs page.</p>
+        </div>
+        <div class="card step">
+          <div class="step-num">2</div>
+          <h3>Employee asks</h3>
+          <p>An employee types a question in the Ask AI chat.</p>
+        </div>
+        <div class="card step">
+          <div class="step-num">3</div>
+          <h3>Gemini answers</h3>
+          <p>The server sends the question and the FAQs to Gemini, which returns an answer.</p>
+        </div>
+      </div>
+
+      <h2 class="section-title">Built with</h2>
+      <p class="section-sub">Tech stack</p>
+      <div class="tech">
+        <span>HTML / CSS / JavaScript</span>
+        <span>Node.js</span>
+        <span>Express</span>
+        <span>MongoDB</span>
+        <span>Mongoose</span>
+        <span>Google Gemini AI</span>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">© 2026 AI FAQ Assistant · TN Skills Project</div>
+  </footer>
+
+  <script src="config.js"></script>
+</body>
+</html>

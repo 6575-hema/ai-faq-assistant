@@ -1,0 +1,39 @@
+{
+  "info": {
+    "name": "AI FAQ Assistant API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All FAQs (Admin)",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://localhost:5000/api/faqs" }
+      }
+    },
+    {
+      "name": "Add FAQ (Admin)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What is the dress code?\",\n  \"answer\": \"Smart casuals Mon-Thu, Casuals on Fri.\"\n}"
+        },
+        "url": { "raw": "http://localhost:5000/api/faqs" }
+      }
+    },
+    {
+      "name": "Ask Question (Employee Chatbot)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"How many days can I take WFH?\"\n}"
+        },
+        "url": { "raw": "http://localhost:5000/api/chat" }
+      }
+    }
+  ]
+}
