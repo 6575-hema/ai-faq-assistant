@@ -28,19 +28,22 @@ Instructions:
 3. If the query is unrelated to company HR policies or missing from the list, politely inform the employee to contact HR directly.
 `;
 
-  let response;
-  try {
-    response = await ai.models.generateContent({
-      model: process.env.GEMINI_MODEL || 'gemini-3.8-flash',
-      contents: prompt,
-    });
-  } catch (err) {
-    const error = new Error(`Gemini API request failed: ${err.message}`);
-    error.statusCode = 502;
-    throw error;
+  // If the main model is busy or unavailable, fall back to the next one.
+  const models = [process.env.GEMINI_MODEL || 'gemini-3.8-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
+
+  let lastError;
+  for (const model of models) {
+    try {
+      const response = await ai.models.generateContent({ model, contents: prompt });
+      return response.text;
+    } catch (err) {
+      lastError = err;
+    }
   }
 
-  return response.text;
+  const error = new Error(`Gemini API request failed: ${lastError.message}`);
+  error.statusCode = 502;
+  throw error;
 };
 
 module.exports = { getGeminiResponse };

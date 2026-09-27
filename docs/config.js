@@ -1,6 +1,6 @@
 // Where the Express backend lives.
 // After deploying to Render, replace the URL below with your own Render URL.
-const RENDER_URL = 'https://ai-faq-assistant.onrender.com';
+const RENDER_URL = 'https://ai-faq-assistant-9gvp.onrender.com';
 
 const isLocal = ['localhost', '127.0.0.1', ''].includes(location.hostname);
 // Served by Express itself (localhost:5000) -> same origin; opened any other local way -> point at localhost:5000.
